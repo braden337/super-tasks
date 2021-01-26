@@ -12,27 +12,35 @@ function Users({removeUser, users, tasks, changeFilter}) {
   return (
     <table className="table">
       <tbody>
-        {Users.map(user => (
-          <tr key={user.id}>
-            <td className="align-middle" onClick={() => changeFilter(user.id)}>{user.name}</td>
-            <td className="text-center">
-              <button type="button" className="btn btn-success" disabled>
-                <span className="px-1">{user.complete}</span>
-                <i className="bi bi-check2-circle"></i>
-                <span className="px-1">{user.incomplete}</span>
-                <i className="bi bi-circle"></i>
-              </button>
-            </td>
-            <td className="text-end">
-              <button
-                type="button"
-                className="btn btn-danger"
-                onClick={() => removeUser(user.id)}>
-                <i className="bi bi-x-circle"></i>
-              </button>
-            </td>
-          </tr>
-        ))}
+        {Users.length > 0 ? (
+          Users.map(user => (
+            <tr key={user.id}>
+              <td
+                className="align-middle"
+                onClick={() => changeFilter(user)}>
+                {user.name}
+              </td>
+              <td className="text-center">
+                <button type="button" className="btn btn-success" disabled>
+                  <span className="px-1">{user.complete}</span>
+                  <i className="bi bi-check2-circle"></i>
+                  <span className="px-1">{user.incomplete}</span>
+                  <i className="bi bi-circle"></i>
+                </button>
+              </td>
+              <td className="text-end">
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={() => removeUser(user.id)}>
+                  <i className="bi bi-x-circle"></i>
+                </button>
+              </td>
+            </tr>
+          ))
+        ) : (
+          <h3>No users</h3>
+        )}
       </tbody>
     </table>
   );

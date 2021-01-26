@@ -28,18 +28,17 @@ function App() {
     JSON.parse(localStorage.getItem('filter')) ?? {archive: false}
   );
 
-  let [filterUser, setFilterUser] = useState(
-    JSON.parse(localStorage.getItem('filterUser')) ?? false
+  let [currentFilter, setCurrentFilter] = useState(
+    JSON.parse(localStorage.getItem('currentFilter')) ?? 'all'
   );
-
 
   useEffect(() => {
     localStorage.setItem('users', JSON.stringify(users));
   }, [users]);
 
   useEffect(() => {
-    localStorage.setItem('filterUser', JSON.stringify(filterUser));
-  }, [filterUser]);
+    localStorage.setItem('currentFilter', JSON.stringify(currentFilter));
+  }, [currentFilter]);
 
   useEffect(() => {
     localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -65,7 +64,7 @@ function App() {
       {id: two, name: 'Oscar'},
       {id: three, name: 'Fred'},
     ]);
-    
+
     setTasks([
       {
         id: one,
@@ -96,7 +95,7 @@ function App() {
     setTasks([]);
     setFiltered([]);
     setFilter({archive: false});
-    setFilterUser(false);
+    setCurrentFilter('all');
   };
 
   const addUser = name => {
@@ -142,9 +141,11 @@ function App() {
     setTasks(modified);
   };
 
-  const changeFilter = (filter) => {
-    const predicate = {}
-    setFilterUser(false);
+  const changeFilter = filter => {
+    const predicate = {};
+
+    setCurrentFilter(filter);
+
     switch (filter) {
       case 'all':
         predicate.archive = false;
@@ -161,17 +162,17 @@ function App() {
         predicate.complete = false;
         break;
       case 'unassigned':
-        predicate.archive =  false;
+        predicate.archive = false;
         predicate.user_id = '_';
         break;
       default:
-        predicate.archive =  false;
-        predicate.user_id = filter;
-        setFilterUser(true);
+        predicate.archive = false;
+        predicate.user_id = filter.id;
+        setCurrentFilter(filter.name);
     }
 
     setFilter(predicate);
-  }
+  };
 
   return (
     <div className="container">
@@ -179,8 +180,10 @@ function App() {
         <div className="col-md-9">
           <h1>Tasks</h1>
           <Input add={addTask} />
-          <Filter change={changeFilter} filterUser={filterUser}/>
-          <Tasks {...{tasks: filtered, users, removeTask, toggleTask, assignTask}} />
+          <Filter change={changeFilter} currentFilter={currentFilter} />
+          <Tasks
+            {...{tasks: filtered, users, removeTask, toggleTask, assignTask}}
+          />
         </div>
         <div className="col-md-3">
           <h1>Users</h1>
