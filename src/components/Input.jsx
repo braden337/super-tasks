@@ -33,8 +33,7 @@ function Input(props) {
         <button
           className="btn btn-primary"
           type="button"
-          onClick={handleSubmit}
-        >
+          onClick={handleSubmit}>
           Add
         </button>
       </div>

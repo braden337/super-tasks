@@ -1,12 +1,11 @@
-import React from 'react'
+import React from 'react';
 
 export default function Tasks(props) {
-
   const handleChange = (e, id) => {
-    let user_id = e.target.value
+    let user_id = e.target.value;
 
-    props.assignTask(user_id, id)
-  }
+    props.assignTask(user_id, id);
+  };
 
   return (
     <table className="table">
@@ -15,10 +14,15 @@ export default function Tasks(props) {
           <tr key={task.id}>
             <td className="align-middle">{task.description}</td>
             <td className="text-center">
-              <button type="button" className="btn btn-success mx-1" onClick={() => props.toggleTask(task.id)}>
-                {task.complete ?
+              <button
+                type="button"
+                className="btn btn-success mx-1"
+                onClick={() => props.toggleTask(task.id)}>
+                {task.complete ? (
                   <i className="bi bi-check2-circle"></i>
-                  : <i className="bi bi-circle"></i>}
+                ) : (
+                  <i className="bi bi-circle"></i>
+                )}
               </button>
               <button
                 type="button"
@@ -28,17 +32,21 @@ export default function Tasks(props) {
               </button>
             </td>
             <td>
-              <select className="form-select" aria-label="Default select example" onChange={(e) => handleChange(e, task.id)}>
+              <select
+                className="form-select"
+                aria-label="Default select example"
+                onChange={e => handleChange(e, task.id)}>
                 <option defaultValue>_</option>
                 {props.users.map(user => (
-                  <option value={user.id} key={user.id}>{user.name}</option>
+                  <option value={user.id} key={user.id}>
+                    {user.name}
+                  </option>
                 ))}
               </select>
             </td>
           </tr>
         ))}
-
       </tbody>
     </table>
-  )
+  );
 }

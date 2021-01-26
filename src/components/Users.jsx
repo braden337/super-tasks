@@ -1,12 +1,12 @@
 import React from 'react';
-import { filter, reject } from 'lodash';
+import {filter, reject} from 'lodash';
 
-function Users({ removeUser, users, tasks }) {
-  let Users = users.map(({ id, name }) => ({
+function Users({removeUser, users, tasks}) {
+  let Users = users.map(({id, name}) => ({
     id,
     name,
-    complete: filter(filter(tasks, 'complete'), { user_id: id }).length,
-    incomplete: filter(reject(tasks, 'complete'), { user_id: id }).length,
+    complete: filter(filter(tasks, 'complete'), {user_id: id}).length,
+    incomplete: filter(reject(tasks, 'complete'), {user_id: id}).length,
   }));
 
   return (
