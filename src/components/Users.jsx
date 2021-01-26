@@ -1,12 +1,14 @@
 import React from 'react';
-import {filter, reject} from 'lodash';
+import {filter} from 'lodash';
 
 function Users({removeUser, users, tasks, changeFilter}) {
   let Users = users.map(({id, name}) => ({
     id,
     name,
-    complete: filter(filter(tasks, 'complete'), {user_id: id}).length,
-    incomplete: filter(reject(tasks, 'complete'), {user_id: id}).length,
+    complete: filter(tasks, {complete: true, archive: false, user_id: id})
+      .length,
+    incomplete: filter(tasks, {complete: false, archive: false, user_id: id})
+      .length,
   }));
 
   return (
@@ -15,9 +17,7 @@ function Users({removeUser, users, tasks, changeFilter}) {
         {Users.length > 0 ? (
           Users.map(user => (
             <tr key={user.id}>
-              <td
-                className="align-middle"
-                onClick={() => changeFilter(user)}>
+              <td className="align-middle" onClick={() => changeFilter(user)}>
                 {user.name}
               </td>
               <td className="text-center">
