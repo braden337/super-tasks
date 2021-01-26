@@ -1,7 +1,7 @@
 import React from 'react';
 import {filter, reject} from 'lodash';
 
-function Users({removeUser, users, tasks}) {
+function Users({removeUser, users, tasks, changeFilter}) {
   let Users = users.map(({id, name}) => ({
     id,
     name,
@@ -14,7 +14,7 @@ function Users({removeUser, users, tasks}) {
       <tbody>
         {Users.map(user => (
           <tr key={user.id}>
-            <td className="align-middle">{user.name}</td>
+            <td className="align-middle" onClick={() => changeFilter(user.id)}>{user.name}</td>
             <td className="text-center">
               <button type="button" className="btn btn-success" disabled>
                 <span className="px-1">{user.complete}</span>

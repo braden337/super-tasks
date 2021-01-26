@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import {v4 as uuidv4} from 'uuid';
-import {reject, update, find, set} from 'lodash';
+import {reject, update, find, set, filter as _filter} from 'lodash';
 
 import Users from './components/Users';
 import Input from './components/Input';
 import Tasks from './components/Tasks';
+import Filter from './components/Filters';
 
 // user: id, name
 // task: id, description, completed, assigned_to(user_id)
@@ -15,18 +16,44 @@ function App() {
     JSON.parse(localStorage.getItem('users')) ?? []
   );
 
+  let [filtered, setFiltered] = useState(
+    JSON.parse(localStorage.getItem('filtered')) ?? []
+  );
+
   let [tasks, setTasks] = useState(
     JSON.parse(localStorage.getItem('tasks')) ?? []
   );
+
+  let [filter, setFilter] = useState(
+    JSON.parse(localStorage.getItem('filter')) ?? {archive: false}
+  );
+
+  let [filterUser, setFilterUser] = useState(
+    JSON.parse(localStorage.getItem('filterUser')) ?? false
+  );
+
 
   useEffect(() => {
     localStorage.setItem('users', JSON.stringify(users));
   }, [users]);
 
   useEffect(() => {
+    localStorage.setItem('filterUser', JSON.stringify(filterUser));
+  }, [filterUser]);
+
+  useEffect(() => {
     localStorage.setItem('tasks', JSON.stringify(tasks));
-    console.log(tasks);
+    setFiltered(_filter(tasks, filter));
   }, [tasks]);
+
+  useEffect(() => {
+    localStorage.setItem('filtered', JSON.stringify(filtered));
+  }, [filtered]);
+
+  useEffect(() => {
+    localStorage.setItem('filter', JSON.stringify(filter));
+    setFiltered(_filter(tasks, filter));
+  }, [filter]);
 
   const load = () => {
     let one = uuidv4();
@@ -44,7 +71,7 @@ function App() {
         id: one,
         description: 'Eat',
         complete: true,
-        archive: false,
+        archive: true,
         user_id: one,
       },
       {
@@ -67,6 +94,9 @@ function App() {
   const reset = () => {
     setUsers([]);
     setTasks([]);
+    setFiltered([]);
+    setFilter({archive: false});
+    setFilterUser(false);
   };
 
   const addUser = name => {
@@ -112,18 +142,50 @@ function App() {
     setTasks(modified);
   };
 
+  const changeFilter = (filter) => {
+    const predicate = {}
+    setFilterUser(false);
+    switch (filter) {
+      case 'all':
+        predicate.archive = false;
+        break;
+      case 'archive':
+        predicate.archive = true;
+        break;
+      case 'complete':
+        predicate.archive = false;
+        predicate.complete = true;
+        break;
+      case 'incomplete':
+        predicate.archive = false;
+        predicate.complete = false;
+        break;
+      case 'unassigned':
+        predicate.archive =  false;
+        predicate.user_id = '_';
+        break;
+      default:
+        predicate.archive =  false;
+        predicate.user_id = filter;
+        setFilterUser(true);
+    }
+
+    setFilter(predicate);
+  }
+
   return (
     <div className="container">
       <div className="row">
         <div className="col-md-9">
           <h1>Tasks</h1>
           <Input add={addTask} />
-          <Tasks {...{tasks, users, removeTask, toggleTask, assignTask}} />
+          <Filter change={changeFilter} filterUser={filterUser}/>
+          <Tasks {...{tasks: filtered, users, removeTask, toggleTask, assignTask}} />
         </div>
         <div className="col-md-3">
           <h1>Users</h1>
           <Input add={addUser} />
-          <Users {...{users, tasks, removeUser}} />
+          <Users {...{users, tasks, removeUser, changeFilter}} />
         </div>
       </div>
       <div className="row">

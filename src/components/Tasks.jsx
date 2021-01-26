@@ -17,7 +17,8 @@ export default function Tasks(props) {
               <button
                 type="button"
                 className="btn btn-success mx-1"
-                onClick={() => props.toggleTask(task.id)}>
+                onClick={() => props.toggleTask(task.id)}
+                disabled={task.archive}>
                 {task.complete ? (
                   <i className="bi bi-check2-circle"></i>
                 ) : (
@@ -27,7 +28,8 @@ export default function Tasks(props) {
               <button
                 type="button"
                 className="btn btn-danger mx-1"
-                onClick={() => props.removeTask(task)}>
+                onClick={() => props.removeTask(task)}
+                disabled={task.archive}>
                 <i className="bi bi-x-circle"></i>
               </button>
             </td>
@@ -36,7 +38,8 @@ export default function Tasks(props) {
                 className="form-select"
                 aria-label="Default select example"
                 onChange={e => handleChange(e, task.id)}
-                value={task.user_id}>
+                value={task.user_id}
+                disabled={task.archive}>
                 <option defaultValue>_</option>
                 {props.users.map(user => (
                   <option value={user.id} key={user.id}>
