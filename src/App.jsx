@@ -28,6 +28,42 @@ function App() {
     console.log(tasks);
   }, [tasks]);
 
+  const load = () => {
+    let one = uuidv4();
+    let two = uuidv4();
+    let three = uuidv4();
+
+    setUsers([
+      {id: one, name: 'Prince'},
+      {id: two, name: 'Oscar'},
+      {id: three, name: 'Fred'},
+    ]);
+    
+    setTasks([
+      {
+        id: one,
+        description: 'Eat',
+        complete: true,
+        archive: false,
+        user_id: one,
+      },
+      {
+        id: two,
+        description: 'Walk',
+        complete: false,
+        archive: false,
+        user_id: two,
+      },
+      {
+        id: three,
+        description: 'Sleep',
+        complete: false,
+        archive: false,
+        user_id: '_',
+      },
+    ]);
+  };
+
   const reset = () => {
     setUsers([]);
     setTasks([]);
@@ -97,7 +133,9 @@ function App() {
               Reset
             </button>
           ) : (
-            ''
+            <button className="btn btn-info" onClick={load}>
+              Load
+            </button>
           )}
         </div>
       </div>

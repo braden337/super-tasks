@@ -35,7 +35,8 @@ export default function Tasks(props) {
               <select
                 className="form-select"
                 aria-label="Default select example"
-                onChange={e => handleChange(e, task.id)}>
+                onChange={e => handleChange(e, task.id)}
+                value={task.user_id}>
                 <option defaultValue>_</option>
                 {props.users.map(user => (
                   <option value={user.id} key={user.id}>
