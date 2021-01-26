@@ -1,0 +1,32 @@
+{
+  "name": "super-tasks",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "clean": "rimraf dist/* *.zip",
+    "dev": "parcel src/index.html --open",
+    "build": "parcel build src/index.html --public-url ./",
+    "dist": "run-s clean build",
+    "netlify": "netlify deploy -p -d dist",
+    "publish": "run-s netlify",
+    "deploy": "run-s dist publish",
+    "archive": "git archive -o latest.zip HEAD -9",
+    "zip": "run-s clean archive",
+    "start": "run-s dev"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/preset-react": "^7.12.10",
+    "bootstrap": "^5.0.0-beta1",
+    "lodash": "^4.17.20",
+    "netlify-cli": "^2.70.0",
+    "npm-run-all": "^4.1.5",
+    "parcel": "^2.0.0-beta.1",
+    "rimraf": "^3.0.2",
+    "uuid": "^8.3.2"
+  },
+  "dependencies": {
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  }
+}
