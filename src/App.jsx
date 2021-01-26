@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import {v4 as uuidv4} from 'uuid';
-import {reject, update, find, set, filter as _filter} from 'lodash';
+import {reject, update, find, set, filter} from 'lodash';
 
 import Users from './components/Users';
 import Input from './components/Input';
 import Tasks from './components/Tasks';
-import Filter from './components/Filters';
+import Filters from './components/Filters';
 
 // user: id, name
 // task: id, description, completed, assigned_to(user_id)
@@ -24,8 +24,8 @@ function App() {
     JSON.parse(localStorage.getItem('tasks')) ?? []
   );
 
-  let [filter, setFilter] = useState(
-    JSON.parse(localStorage.getItem('filter')) ?? {archive: false}
+  let [predicate, setPredicate] = useState(
+    JSON.parse(localStorage.getItem('predicate')) ?? {archive: false}
   );
 
   let [currentFilter, setCurrentFilter] = useState(
@@ -42,7 +42,7 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem('tasks', JSON.stringify(tasks));
-    setFiltered(_filter(tasks, filter));
+    setFiltered(filter(tasks, predicate));
   }, [tasks]);
 
   useEffect(() => {
@@ -50,9 +50,9 @@ function App() {
   }, [filtered]);
 
   useEffect(() => {
-    localStorage.setItem('filter', JSON.stringify(filter));
-    setFiltered(_filter(tasks, filter));
-  }, [filter]);
+    localStorage.setItem('predicate', JSON.stringify(predicate));
+    setFiltered(filter(tasks, predicate));
+  }, [predicate]);
 
   const load = () => {
     let one = uuidv4();
@@ -94,7 +94,7 @@ function App() {
     setUsers([]);
     setTasks([]);
     setFiltered([]);
-    setFilter({archive: false});
+    setPredicate({archive: false});
     setCurrentFilter('all');
   };
 
@@ -171,7 +171,7 @@ function App() {
         setCurrentFilter(filter.name);
     }
 
-    setFilter(predicate);
+    setPredicate(predicate);
   };
 
   return (
@@ -180,7 +180,7 @@ function App() {
         <div className="col-md-9">
           <h1>Tasks</h1>
           <Input add={addTask} />
-          <Filter change={changeFilter} currentFilter={currentFilter} />
+          <Filters change={changeFilter} currentFilter={currentFilter} />
           <Tasks
             {...{tasks: filtered, users, removeTask, toggleTask, assignTask}}
           />

@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react';
 import {capitalize} from 'lodash';
 
-function Filter(props) {
+function Filters(props) {
   let filters = ['all', 'archive', 'complete', 'incomplete', 'unassigned'];
 
   filters.includes(props.currentFilter)
@@ -30,4 +30,4 @@ function Filter(props) {
   );
 }
 
-export default Filter;
+export default Filters;
