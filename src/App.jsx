@@ -108,7 +108,13 @@ function App() {
 
   const addTask = description => {
     setTasks([
-      {id: uuidv4(), description, complete: false, archive: false},
+      {
+        id: uuidv4(),
+        description,
+        complete: false,
+        archive: false,
+        user_id: '_',
+      },
       ...tasks,
     ]);
   };
