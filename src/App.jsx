@@ -69,44 +69,64 @@ function App() {
   };
 
   const addUser = name => {
-    users.unshift({id: uuidv4(), name});
-    setUsers(users);
+    setUsers([{id: uuidv4(), name}, ...users]);
   };
 
   const removeUser = id => {
+    let user = find(users, {id});
+
+    let modified = [...tasks];
+
+    for (let task of modified)
+      if (task.user_id === id && task.archive)
+        set(task, 'archived_by', user.name);
+
+    for (let task of modified)
+      if (task.user_id === id) set(task, 'user_id', '_');
+
+    setTasks(modified);
     setUsers(reject(users, {id}));
   };
 
   const addTask = description => {
-    tasks.unshift({
-      id: uuidv4(),
-      description,
-      complete: false,
-      archive: false,
-      user_id: '_',
-    });
-
-    setTasks(tasks);
+    setTasks([
+      {
+        id: uuidv4(),
+        description,
+        complete: false,
+        archive: false,
+        user_id: '_',
+      },
+      ...tasks,
+    ]);
   };
 
-  const removeTask = task => {
-    let id = task.id;
+  const removeTask = ({complete, id}) => {
+    if (complete) {
+      let modified = [...tasks];
+      let task = find(modified, {id});
 
-    task.complete
-      ? set(find(tasks, {id}), 'archive', true)
-      : (tasks = reject(tasks, {id}));
-
-    setTasks(tasks);
+      set(task, 'archive', true);
+      setTasks(modified);
+    } else {
+      setTasks(reject(tasks, {id}));
+    }
   };
 
   const toggleTask = id => {
-    update(find(tasks, {id}), 'complete', x => !x);
-    setTasks(tasks);
+    let modified = [...tasks];
+    let task = find(modified, {id});
+    update(task, 'complete', x => !x);
+
+    setTasks(modified);
   };
 
   const assignTask = (user_id, id) => {
-    assign(find(tasks, {id}), {user_id});
-    setTasks(tasks);
+    let modified = [...tasks];
+    let task = find(modified, {id});
+
+    assign(task, {user_id});
+    setTasks(modified);
   };
 
   const changeFilter = (type, user) => {

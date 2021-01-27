@@ -40,7 +40,7 @@ export default function Tasks(props) {
                 onChange={e => handleChange(e, task.id)}
                 value={task.user_id}
                 disabled={task.archive}>
-                <option defaultValue>_</option>
+                <option defaultValue>{task.archived_by ?? '_'}</option>
                 {props.users.map(user => (
                   <option value={user.id} key={user.id}>
                     {user.name}
