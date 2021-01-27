@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {v4 as uuidv4} from 'uuid';
-import {reject, update, find, set, filter} from 'lodash';
+import {filter, reject, find, set, update, assign} from 'lodash';
 
 import Users from './components/Users';
 import Input from './components/Input';
@@ -69,7 +69,8 @@ function App() {
   };
 
   const addUser = name => {
-    setUsers([{id: uuidv4(), name}, ...users]);
+    users.unshift({id: uuidv4(), name});
+    setUsers(users);
   };
 
   const removeUser = id => {
@@ -77,44 +78,35 @@ function App() {
   };
 
   const addTask = description => {
-    setTasks([
-      {
-        id: uuidv4(),
-        description,
-        complete: false,
-        archive: false,
-        user_id: '_',
-      },
-      ...tasks,
-    ]);
+    tasks.unshift({
+      id: uuidv4(),
+      description,
+      complete: false,
+      archive: false,
+      user_id: '_',
+    });
+
+    setTasks(tasks);
   };
 
   const removeTask = task => {
-    if (task.complete) {
-      let modified = [...tasks];
-      let foundTask = find(modified, {id: task.id});
-      set(foundTask, 'archive', true);
+    let id = task.id;
 
-      setTasks(modified);
-    } else {
-      setTasks(reject(tasks, {id: task.id}));
-    }
+    task.complete
+      ? set(find(tasks, {id}), 'archive', true)
+      : (tasks = reject(tasks, {id}));
+
+    setTasks(tasks);
   };
 
   const toggleTask = id => {
-    let modified = [...tasks];
-    let task = find(modified, {id});
-    update(task, 'complete', x => !x);
-
-    setTasks(modified);
+    update(find(tasks, {id}), 'complete', x => !x);
+    setTasks(tasks);
   };
 
   const assignTask = (user_id, id) => {
-    let modified = [...tasks];
-    let task = find(modified, {id});
-    set(task, 'user_id', user_id);
-
-    setTasks(modified);
+    assign(find(tasks, {id}), {user_id});
+    setTasks(tasks);
   };
 
   const changeFilter = (type, user) => {
