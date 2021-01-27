@@ -18,7 +18,7 @@ function Filters(props) {
             name="filter"
             id={`filter${i}`}
             value={filter}
-            onChange={() => props.change(filter)}
+            onChange={() => props.change(filter, null)}
             checked={filter === props.currentFilter}
           />
           <label className="btn btn-secondary mx-1 my-1" htmlFor={`filter${i}`}>

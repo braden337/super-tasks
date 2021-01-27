@@ -17,7 +17,9 @@ function Users({removeUser, users, tasks, changeFilter}) {
         {Users.length > 0 ? (
           Users.map(user => (
             <tr key={user.id}>
-              <td className="align-middle" onClick={() => changeFilter(user)}>
+              <td
+                className="align-middle"
+                onClick={() => changeFilter(null, user)}>
                 {user.name}
               </td>
               <td className="text-center">

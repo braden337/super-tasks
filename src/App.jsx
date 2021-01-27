@@ -117,36 +117,31 @@ function App() {
     setTasks(modified);
   };
 
-  const changeFilter = filter => {
+  const changeFilter = (type, user) => {
     const predicate = {};
 
-    setCurrentFilter(filter);
+    if (['all', 'complete', 'incomplete', 'unassigned', null].includes(type)) {
+      predicate.archive = false;
+    }
 
-    switch (filter) {
-      case 'all':
-        predicate.archive = false;
-        break;
+    switch (type) {
       case 'archive':
         predicate.archive = true;
         break;
       case 'complete':
-        predicate.archive = false;
         predicate.complete = true;
         break;
       case 'incomplete':
-        predicate.archive = false;
         predicate.complete = false;
         break;
       case 'unassigned':
-        predicate.archive = false;
         predicate.user_id = '_';
         break;
-      default:
-        predicate.archive = false;
-        predicate.user_id = filter.id;
-        setCurrentFilter(filter.name);
+      case null:
+        predicate.user_id = user.id;
     }
 
+    setCurrentFilter(type ?? user.name);
     setPredicate(predicate);
   };
 
