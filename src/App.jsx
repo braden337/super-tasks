@@ -7,29 +7,31 @@ import Input from './components/Input';
 import Tasks from './components/Tasks';
 import Filters from './components/Filters';
 
+import {fakeUsers, fakeTasks} from './data';
+
 // user: id, name
-// task: id, description, completed, assigned_to(user_id)
-// filter: all, completed, incomplete, archive, unassigned
+// task: id, description, complete, user_id
+// filters: all, complete, incomplete, archive, unassigned, user
 
 function App() {
   let [users, setUsers] = useState(
     JSON.parse(localStorage.getItem('users')) ?? []
   );
 
-  let [filtered, setFiltered] = useState(
-    JSON.parse(localStorage.getItem('filtered')) ?? []
-  );
-
   let [tasks, setTasks] = useState(
     JSON.parse(localStorage.getItem('tasks')) ?? []
   );
 
-  let [predicate, setPredicate] = useState(
-    JSON.parse(localStorage.getItem('predicate')) ?? {archive: false}
+  let [filtered, setFiltered] = useState(
+    JSON.parse(localStorage.getItem('filtered')) ?? []
   );
 
   let [currentFilter, setCurrentFilter] = useState(
     JSON.parse(localStorage.getItem('currentFilter')) ?? 'all'
+  );
+
+  let [predicate, setPredicate] = useState(
+    JSON.parse(localStorage.getItem('predicate')) ?? {archive: false}
   );
 
   useEffect(() => {
@@ -37,12 +39,7 @@ function App() {
   }, [users]);
 
   useEffect(() => {
-    localStorage.setItem('currentFilter', JSON.stringify(currentFilter));
-  }, [currentFilter]);
-
-  useEffect(() => {
     localStorage.setItem('tasks', JSON.stringify(tasks));
-    setFiltered(filter(tasks, predicate));
   }, [tasks]);
 
   useEffect(() => {
@@ -50,52 +47,25 @@ function App() {
   }, [filtered]);
 
   useEffect(() => {
+    localStorage.setItem('currentFilter', JSON.stringify(currentFilter));
+  }, [currentFilter]);
+
+  useEffect(() => {
     localStorage.setItem('predicate', JSON.stringify(predicate));
-    setFiltered(filter(tasks, predicate));
   }, [predicate]);
 
+  useEffect(() => {
+    setFiltered(filter(tasks, predicate));
+  }, [tasks, predicate]);
+
   const load = () => {
-    let one = uuidv4();
-    let two = uuidv4();
-    let three = uuidv4();
-
-    setUsers([
-      {id: one, name: 'Prince'},
-      {id: two, name: 'Oscar'},
-      {id: three, name: 'Fred'},
-    ]);
-
-    setTasks([
-      {
-        id: one,
-        description: 'Eat',
-        complete: true,
-        archive: true,
-        user_id: one,
-      },
-      {
-        id: two,
-        description: 'Walk',
-        complete: false,
-        archive: false,
-        user_id: two,
-      },
-      {
-        id: three,
-        description: 'Sleep',
-        complete: false,
-        archive: false,
-        user_id: '_',
-      },
-    ]);
+    setUsers(fakeUsers);
+    setTasks(fakeTasks);
   };
 
   const reset = () => {
-    setUsers([]);
-    setTasks([]);
-    setFiltered([]);
-    setPredicate({archive: false});
-    setCurrentFilter('all');
+    localStorage.clear();
+    window.location = '/';
   };
 
   const addUser = name => {
